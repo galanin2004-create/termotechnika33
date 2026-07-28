@@ -1,0 +1,7 @@
+# Исходники фото из Google Drive (полный набор, в сайте не используется)
+photos/
+
+# Системное
+Thumbs.db
+desktop.ini
+.DS_Store
