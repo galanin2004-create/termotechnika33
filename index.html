@@ -129,6 +129,7 @@
           </svg>
           <h3>Котельная</h3>
           <p>Подбор, установка, обвязка, запуск</p>
+          <button class="card__more" type="button" data-set="kotelnaya">Смотреть фото · 5</button>
         </article>
 
         <article class="card">
@@ -139,6 +140,7 @@
           </svg>
           <h3>Отопление</h3>
           <p>Радиаторы, разводка, балансировка</p>
+          <button class="card__more" type="button" data-set="otoplenie">Смотреть фото · 4</button>
         </article>
 
         <article class="card">
@@ -148,6 +150,7 @@
           </svg>
           <h3>Тёплый пол</h3>
           <p>Контуры, коллектор, настройка</p>
+          <button class="card__more" type="button" data-set="teplyy-pol">Смотреть фото · 4</button>
         </article>
 
         <article class="card">
@@ -157,6 +160,7 @@
           </svg>
           <h3>Вода</h3>
           <p>Погружной насос, станция, фильтры, разводка</p>
+          <button class="card__more" type="button" data-set="voda">Смотреть фото · 4</button>
         </article>
       </div>
 
@@ -520,9 +524,12 @@
 
 <div class="lightbox" hidden>
   <button class="lightbox__close" type="button" aria-label="Закрыть">×</button>
+  <button class="lightbox__nav lightbox__nav--prev" type="button" aria-label="Предыдущее фото">‹</button>
+  <button class="lightbox__nav lightbox__nav--next" type="button" aria-label="Следующее фото">›</button>
   <figure class="lightbox__figure">
     <img src="" alt="">
     <figcaption></figcaption>
+    <p class="lightbox__count"></p>
   </figure>
 </div>
 

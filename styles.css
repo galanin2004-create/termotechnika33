@@ -213,10 +213,21 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- Карточки услуг ---------- */
 .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
-.card { background: var(--paper); padding: clamp(24px, 2.6vw, 36px); transition: background-color .2s; }
+.card { background: var(--paper); padding: clamp(24px, 2.6vw, 36px); transition: background-color .2s; cursor: pointer; display: flex; flex-direction: column; }
 .card:hover { background: #fff; }
 .card h3 { margin: 22px 0 10px; }
 .card p { color: var(--muted); font-size: 16px; }
+.card__more {
+  margin: auto 0 0; padding: 18px 0 0;
+  align-self: flex-start;
+  background: none; border: none; border-bottom: 2px solid var(--flame);
+  border-radius: 0;
+  font-family: var(--text); font-weight: 500; font-size: 14px;
+  letter-spacing: .04em; text-transform: uppercase;
+  color: var(--graphite); cursor: pointer;
+  transition: color .18s, background-color .18s;
+}
+.card:hover .card__more, .card__more:hover { background: var(--flame); }
 
 /* Пиктограммы: сетка 64×64, линия 5–6 px, скруглённые концы, без заливок */
 .icon {
@@ -356,6 +367,32 @@ a { color: inherit; text-decoration: none; }
   font-size: 30px; line-height: 1; cursor: pointer;
 }
 .lightbox__close:hover { background: var(--brass); }
+
+.lightbox__count {
+  margin: 12px auto 0;
+  font-family: var(--head); font-size: 15px; letter-spacing: .1em;
+  color: var(--brass);
+}
+.lightbox__nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 56px; height: 72px;
+  background: rgba(243, 240, 234, .10); color: var(--paper);
+  border: none; border-radius: 0;
+  font-size: 40px; line-height: 1; cursor: pointer;
+  transition: background-color .18s, color .18s;
+}
+.lightbox__nav:hover { background: var(--flame); color: var(--graphite); }
+.lightbox__nav--prev { left: 12px; }
+.lightbox__nav--next { right: 12px; }
+.lightbox.is-single .lightbox__nav, .lightbox.is-single .lightbox__count { display: none; }
+
+@media (max-width: 720px) {
+  /* на узком экране стрелки не лезут на снимок: листаем свайпом или кнопками снизу */
+  .lightbox { padding-bottom: 84px; }
+  .lightbox__nav { top: auto; bottom: 16px; transform: none; width: 54px; height: 54px; font-size: 32px; }
+  .lightbox__figure img { max-height: 64vh; }
+  .lightbox__figure figcaption { padding: 0 12px; }
+}
 
 .quotes { margin-top: clamp(48px, 6vw, 80px); }
 .quotes__title { font-family: var(--head); text-transform: uppercase; letter-spacing: .05em; font-size: 15px; color: var(--muted); margin-bottom: 24px; }

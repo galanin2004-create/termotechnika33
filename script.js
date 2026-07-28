@@ -124,39 +124,130 @@
     });
   }
 
-  /* --- Просмотр фото объектов --- */
+  /* --- Фото по разделам: что открывается с карточек услуг --- */
+  var PHOTO_SETS = {
+    'kotelnaya': [
+      ['kotelnaya-dva-kotla.jpg', 'Котельная с двумя котлами, расширительным баком и обвязкой', 'Два котла и полная обвязка · дом 240 м²'],
+      ['obvyazka-kotla.jpg', 'Обвязка котла: гидрострелка, насосы, запорная арматура', 'Гидрострелка и два контура'],
+      ['nasosnye-gruppy.jpg', 'Котёл, четыре насосные группы и щит автоматики', 'Четыре насосные группы и щит · дом 320 м²'],
+      ['kotelnaya-kollektor-beton.jpg', 'Котельная: котёл, коллектор тёплого пола, расширительный бак', 'Котельная целиком · дом 210 м²'],
+      ['kotelnaya-kollektor-okno.jpg', 'Котёл, коллектор и разводка воды в светлой котельной', 'Котельная и коллектор · дом 180 м²']
+    ],
+    'otoplenie': [
+      ['radiatory-komnata.jpg', 'Радиаторы отопления под окнами в комнате', 'Радиаторы по комнате · подводка в полу'],
+      ['nasosnye-gruppy.jpg', 'Насосные группы и щит автоматики рядом с котлом', 'Насосные группы: отдельный контур на этаж'],
+      ['obvyazka-kotla.jpg', 'Обвязка котла с гидрострелкой и насосами', 'Гидрострелка развязывает котёл и контуры'],
+      ['kotelnaya-kollektor-okno.jpg', 'Разводка отопления и водоснабжения по котельной', 'Разводка от котла по дому']
+    ],
+    'teplyy-pol': [
+      ['teplyy-pol-konturi.jpg', 'Контуры водяного тёплого пола уложены по этажу', 'Контуры по этажу · шаг проверен'],
+      ['kollektor-konturi.jpg', 'Коллектор тёплого пола и заведённые в него контуры', 'Контуры заведены в коллектор'],
+      ['kollektor-shkaf.jpg', 'Коллектор тёплого пола в шкафу, контуры подписаны', 'Коллектор в шкафу, 12 контуров · каждый подписан'],
+      ['kotel-kollektor-svet.jpg', 'Котёл, бойлер и коллектор тёплого пола на 11 контуров', 'Котёл, бойлер и 11 контуров пола']
+    ],
+    'voda': [
+      ['vodosnabzhenie-razvodka.jpg', 'Водоснабжение: бойлер, фильтры, гидроаккумулятор, разводка', 'Насос, станция, фильтры, разводка по дому'],
+      ['boyler-gidroakkumulyator.jpg', 'Бойлер и гидроаккумулятор водоснабжения на стене', 'Бойлер и гидроаккумулятор'],
+      ['kotel-boyler-razvodka.jpg', 'Котёл, бойлер и разводка воды одним узлом', 'Горячая и холодная вода одним узлом'],
+      ['kotel-boyler-plitka.jpg', 'Котёл и бойлер в отделанной котельной', 'Тот же узел после отделки']
+    ]
+  };
+
+  /* --- Просмотр фото --- */
   var lightbox = document.querySelector('.lightbox');
   var lightboxImg = lightbox.querySelector('img');
   var lightboxCap = lightbox.querySelector('figcaption');
+  var lightboxCount = lightbox.querySelector('.lightbox__count');
   var lastFocused = null;
+  var shots = [];        // текущий набор: [{src, alt, caption}]
+  var shotIndex = 0;
 
-  function openShot(img) {
-    var caption = img.parentElement.querySelector('figcaption');
+  function showShot(i) {
+    if (!shots.length) return;
+    shotIndex = (i + shots.length) % shots.length;
+    var s = shots[shotIndex];
+    lightboxImg.src = s.src;
+    lightboxImg.alt = s.alt;
+    lightboxCap.textContent = s.caption;
+    lightboxCount.textContent = shots.length > 1 ? (shotIndex + 1) + ' / ' + shots.length : '';
+    lightbox.classList.toggle('is-single', shots.length < 2);
+  }
+
+  function openShots(list, index) {
+    if (!list.length) return;
     lastFocused = document.activeElement;
-    lightboxImg.src = img.currentSrc || img.src;
-    lightboxImg.alt = img.alt;
-    lightboxCap.textContent = caption ? caption.textContent : '';
+    shots = list;
+    showShot(index || 0);
     lightbox.hidden = false;
     document.body.style.overflow = 'hidden';
     lightbox.querySelector('.lightbox__close').focus();
   }
 
+  /* набор из карточки услуги */
+  function openSet(name) {
+    var set = PHOTO_SETS[name];
+    if (!set) return;
+    openShots(set.map(function (item) {
+      return { src: 'img/' + item[0], alt: item[1], caption: item[2] };
+    }), 0);
+  }
+
+  /* набор из галереи объектов: листаем все снимки подряд */
+  function openFromDom(img) {
+    var all = Array.prototype.slice.call(document.querySelectorAll('.shot img'));
+    var index = all.indexOf(img);
+    if (index === -1) all = [img], index = 0;
+
+    openShots(all.map(function (el) {
+      var cap = el.parentElement.querySelector('figcaption');
+      return {
+        src: el.currentSrc || el.src,
+        alt: el.alt,
+        caption: cap ? cap.textContent.trim() : ''
+      };
+    }), index);
+  }
+
   function closeShot() {
     lightbox.hidden = true;
     lightboxImg.src = '';
+    shots = [];
     document.body.style.overflow = '';
     if (lastFocused) lastFocused.focus();
   }
 
   document.addEventListener('click', function (e) {
+    var more = e.target.closest('.card__more');
+    var card = e.target.closest('.card');
+    if (more || (card && card.querySelector('.card__more'))) {
+      openSet((more || card.querySelector('.card__more')).getAttribute('data-set'));
+      return;
+    }
+
     var img = e.target.closest('.shot img, .band img');
-    if (img) { openShot(img); return; }
-    if (e.target.closest('.lightbox')) closeShot();
+    if (img) { openFromDom(img); return; }
+
+    if (e.target.closest('.lightbox__next, .lightbox__nav--next')) { showShot(shotIndex + 1); return; }
+    if (e.target.closest('.lightbox__nav--prev')) { showShot(shotIndex - 1); return; }
+    if (e.target.closest('.lightbox__close') || e.target.classList.contains('lightbox')) closeShot();
   });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !lightbox.hidden) closeShot();
+    if (lightbox.hidden) return;
+    if (e.key === 'Escape') closeShot();
+    if (e.key === 'ArrowRight') showShot(shotIndex + 1);
+    if (e.key === 'ArrowLeft') showShot(shotIndex - 1);
   });
+
+  /* свайп на телефоне */
+  var touchX = null;
+  lightbox.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchend', function (e) {
+    if (touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 45) showShot(shotIndex + (dx < 0 ? 1 : -1));
+    touchX = null;
+  }, { passive: true });
 
   /* --- Телефон: маска +7 900 000-00-00 --- */
   function formatPhone(value) {
