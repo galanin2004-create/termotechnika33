@@ -391,6 +391,25 @@ a { color: inherit; text-decoration: none; }
 .call-fab { display: none; position: fixed; right: 16px; bottom: 16px; z-index: 40; width: 58px; height: 58px; background: var(--flame); align-items: center; justify-content: center; }
 .call-fab svg { width: 26px; height: 26px; fill: var(--graphite); }
 
+/* ---------- Свечение за курсором ---------- */
+.glow { position: relative; }
+.glow > * { position: relative; z-index: 1; }
+.glow::before {
+  content: "";
+  position: absolute; inset: 0; z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle var(--g-size, 440px) at var(--gx, 50%) var(--gy, 50%),
+    rgba(238, 106, 30, var(--g-in, .30)) 0%,
+    rgba(238, 106, 30, var(--g-mid, .10)) 40%,
+    rgba(238, 106, 30, 0) 72%);
+  opacity: var(--go, 0);
+  transition: opacity .45s ease;
+}
+/* На бумажных секциях свет мягче — оранжевого по-прежнему немного */
+.section:not(.section--dark) { --g-in: .16; --g-mid: .05; --g-size: 380px; }
+.site-footer { --g-in: .24; --g-mid: .08; }
+
 /* ---------- Появление секций ---------- */
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
 .reveal.is-in { opacity: 1; transform: none; }

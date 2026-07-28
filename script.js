@@ -52,6 +52,78 @@
     });
   }
 
+  /* --- Оранжевое свечение за курсором --- */
+  var glowSections = document.querySelectorAll('.glow');
+  var glowNow = null;          // секция под курсором
+  var glowX = 0, glowY = 0;    // куда тянемся
+  var drawX = 0, drawY = 0;    // где рисуем сейчас
+  var glowFrame = null;
+  var smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function paintGlow() {
+    glowFrame = null;
+    if (!glowNow) return;
+
+    var k = smooth ? 0.16 : 1;
+    drawX += (glowX - drawX) * k;
+    drawY += (glowY - drawY) * k;
+
+    glowNow.style.setProperty('--gx', drawX.toFixed(1) + 'px');
+    glowNow.style.setProperty('--gy', drawY.toFixed(1) + 'px');
+
+    if (Math.abs(glowX - drawX) > 0.5 || Math.abs(glowY - drawY) > 0.5) {
+      glowFrame = requestAnimationFrame(paintGlow);
+    }
+  }
+
+  function putGlow(el, x, y) {
+    el.style.setProperty('--gx', x.toFixed(1) + 'px');
+    el.style.setProperty('--gy', y.toFixed(1) + 'px');
+  }
+
+  function updateGlow(clientX, clientY, immediate) {
+    var under = document.elementFromPoint(clientX, clientY);
+    var section = under && under.closest ? under.closest('.glow') : null;
+
+    if (section !== glowNow) {
+      if (glowNow) glowNow.style.setProperty('--go', '0');
+      glowNow = section;
+      immediate = true;                 // в новую секцию входим без рывка
+    }
+    if (!glowNow) return;
+
+    var rect = glowNow.getBoundingClientRect();
+    glowX = clientX - rect.left;
+    glowY = clientY - rect.top;
+
+    if (immediate || !smooth) {
+      drawX = glowX; drawY = glowY;
+      putGlow(glowNow, drawX, drawY);
+      glowNow.style.setProperty('--go', '1');
+      return;
+    }
+    if (!glowFrame) glowFrame = requestAnimationFrame(paintGlow);
+  }
+
+  if (glowSections.length && window.matchMedia('(hover: hover)').matches) {
+    var lastX = 0, lastY = 0, seenPointer = false;
+
+    document.addEventListener('pointermove', function (e) {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      lastX = e.clientX; lastY = e.clientY; seenPointer = true;
+      updateGlow(lastX, lastY, false);
+    }, { passive: true });
+
+    /* при прокрутке курсор стоит на месте, а секции едут под ним */
+    window.addEventListener('scroll', function () {
+      if (seenPointer) updateGlow(lastX, lastY, true);
+    }, { passive: true });
+
+    document.addEventListener('pointerleave', function () {
+      if (glowNow) { glowNow.style.setProperty('--go', '0'); glowNow = null; }
+    });
+  }
+
   /* --- Просмотр фото объектов --- */
   var lightbox = document.querySelector('.lightbox');
   var lightboxImg = lightbox.querySelector('img');
