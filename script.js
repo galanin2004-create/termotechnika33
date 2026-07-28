@@ -159,8 +159,6 @@
   });
 
   /* --- Телефон: маска +7 900 000-00-00 --- */
-  var phone = document.getElementById('phone');
-
   function formatPhone(value) {
     var digits = value.replace(/\D/g, '');
     if (digits[0] === '8') digits = '7' + digits.slice(1);
@@ -175,18 +173,21 @@
     return out;
   }
 
-  phone.addEventListener('input', function () {
-    phone.value = formatPhone(phone.value);
-    setInvalid(phone, false);
+  /* маска на всех телефонных полях: заявка и чек-лист */
+  Array.prototype.forEach.call(document.querySelectorAll('input[type="tel"]'), function (el) {
+    el.addEventListener('input', function () {
+      el.value = formatPhone(el.value);
+      setInvalid(el, false);
+    });
+    el.addEventListener('focus', function () {
+      if (!el.value) el.value = '+7 ';
+    });
+    el.addEventListener('blur', function () {
+      if (el.value.replace(/\D/g, '').length < 2) el.value = '';
+    });
   });
 
-  phone.addEventListener('focus', function () {
-    if (!phone.value) phone.value = '+7 ';
-  });
-
-  phone.addEventListener('blur', function () {
-    if (phone.value.replace(/\D/g, '').length < 2) phone.value = '';
-  });
+  var phone = document.getElementById('phone');
 
   /* --- Проверка и отправка формы --- */
   var form = document.querySelector('.form');
@@ -230,6 +231,30 @@
     form.querySelector('button[type="submit"]').textContent = 'Заявка отправлена';
     form.querySelector('button[type="submit"]').disabled = true;
   });
+
+  /* --- Чек-лист: телефон в обмен на памятку --- */
+  var leadForm = document.querySelector('.lead-form');
+
+  if (leadForm) {
+    leadForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var leadPhone = document.getElementById('lead-phone');
+      var valid = leadPhone.value.replace(/\D/g, '').length === 11;
+
+      setInvalid(leadPhone, !valid);
+      if (!valid) { leadPhone.focus(); return; }
+
+      /* Здесь подключается отправка контакта на почту или в CRM.
+         Пока — сразу отдаём чек-лист, как и обещано под кнопкой. */
+      window.open('checklist.html', '_blank', 'noopener');
+
+      leadForm.querySelector('.lead-form__ok').hidden = false;
+      var btn = leadForm.querySelector('button[type="submit"]');
+      btn.textContent = 'Чек-лист отправлен';
+      btn.disabled = true;
+    });
+  }
 
   /* --- Год в подвале держим актуальным --- */
   var bottom = document.querySelector('.footer-bottom p');

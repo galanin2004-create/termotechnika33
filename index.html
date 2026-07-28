@@ -61,6 +61,7 @@
       <a href="#process">Как работаем</a>
       <a href="#estimate">Смета</a>
       <a href="#works">Объекты</a>
+      <a href="#lead">Чек-лист</a>
     </nav>
 
     <div class="header-actions">
@@ -398,6 +399,54 @@
           <blockquote>«Покажи, где ты уже так делал»</blockquote>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ЧЕК-ЛИСТ -->
+  <section class="section section--paper glow" id="lead">
+    <div class="wrap lead-magnet">
+      <div class="lead-magnet__text">
+        <p class="eyebrow">Забрать с собой</p>
+        <h2>Чек-лист:<br>как принять котельную</h2>
+        <p class="section__lead">12 пунктов, по которым принимают работу монтажников.
+          Распечатайте и пройдите по ним при запуске — с любой бригадой, не только с нашей.</p>
+        <ul class="checklist">
+          <li>Что должно быть записано в акте опрессовки</li>
+          <li>Какие бумаги забрать: схема, паспорта, гарантия</li>
+          <li>Что проверить у коллектора и запорной арматуры</li>
+          <li>Какие вопросы задать до подписания договора</li>
+        </ul>
+
+        <form class="lead-form" novalidate>
+          <div class="field field--inline">
+            <label for="lead-phone">Телефон</label>
+            <input id="lead-phone" name="lead-phone" type="tel" inputmode="tel"
+                   placeholder="+7 900 000-00-00" required>
+            <span class="field__error" data-error-for="lead-phone">Введите номер полностью</span>
+          </div>
+          <button class="btn btn--primary" type="submit">Получить чек-лист</button>
+          <p class="form__note">Открывается сразу. Звоним только если попросите — рассылок нет.</p>
+          <p class="lead-form__ok" role="status" hidden>
+            Чек-лист открыт в соседней вкладке.
+            <a href="checklist.html" target="_blank" rel="noopener">Открыть ещё раз</a>
+          </p>
+        </form>
+      </div>
+
+      <a class="lead-magnet__preview" href="checklist.html" target="_blank" rel="noopener"
+         aria-label="Открыть чек-лист приёмки котельной">
+        <span class="sheet">
+          <span class="sheet__brand">ТЕРМОТЕХНИКА<i>33</i></span>
+          <span class="sheet__title">Приёмка котельной</span>
+          <span class="sheet__row"><i></i>Опрессовка при вас, давление в акте</span>
+          <span class="sheet__row"><i></i>Схема системы на руках</span>
+          <span class="sheet__row"><i></i>Паспорта и гарантийные талоны</span>
+          <span class="sheet__row"><i></i>Контуры подписаны на коллекторе</span>
+          <span class="sheet__row sheet__row--fade"><i></i>Балансировка по расчёту</span>
+          <span class="sheet__row sheet__row--fade"><i></i>Дымоход и вентиляция приняты</span>
+          <span class="sheet__more">и ещё 6 пунктов</span>
+        </span>
+      </a>
     </div>
   </section>
 
