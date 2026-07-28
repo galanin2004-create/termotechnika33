@@ -173,7 +173,7 @@
     return out;
   }
 
-  /* маска на всех телефонных полях: заявка и чек-лист */
+  /* маска на телефонных полях */
   Array.prototype.forEach.call(document.querySelectorAll('input[type="tel"]'), function (el) {
     el.addEventListener('input', function () {
       el.value = formatPhone(el.value);
@@ -211,7 +211,7 @@
     var need = document.getElementById('need');
     var bad = null;
 
-    var areaOk = area.value !== '' && Number(area.value) >= 30 && Number(area.value) <= 2000;
+    var areaOk = area.value !== '' && Number(area.value) >= 30 && Number(area.value) <= 1000;
     var needOk = need.value !== '';
     var phoneOk = phone.value.replace(/\D/g, '').length === 11;
 
@@ -231,30 +231,6 @@
     form.querySelector('button[type="submit"]').textContent = 'Заявка отправлена';
     form.querySelector('button[type="submit"]').disabled = true;
   });
-
-  /* --- Чек-лист: телефон в обмен на памятку --- */
-  var leadForm = document.querySelector('.lead-form');
-
-  if (leadForm) {
-    leadForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      var leadPhone = document.getElementById('lead-phone');
-      var valid = leadPhone.value.replace(/\D/g, '').length === 11;
-
-      setInvalid(leadPhone, !valid);
-      if (!valid) { leadPhone.focus(); return; }
-
-      /* Здесь подключается отправка контакта на почту или в CRM.
-         Пока — сразу отдаём чек-лист, как и обещано под кнопкой. */
-      window.open('checklist.html', '_blank', 'noopener');
-
-      leadForm.querySelector('.lead-form__ok').hidden = false;
-      var btn = leadForm.querySelector('button[type="submit"]');
-      btn.textContent = 'Чек-лист отправлен';
-      btn.disabled = true;
-    });
-  }
 
   /* --- Год в подвале держим актуальным --- */
   var bottom = document.querySelector('.footer-bottom p');
