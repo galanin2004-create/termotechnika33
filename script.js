@@ -37,7 +37,7 @@
     sections.forEach(function (s) { navObserver.observe(s); });
 
     /* --- Появление блоков --- */
-    var blocks = document.querySelectorAll('.section__head, .card, .scope__col, .answer, .promise, .principles article, .steps li, .estimate__text, .estimate__doc, .gallery figure, .quotes, .request__text, .form');
+    var blocks = document.querySelectorAll('.section__head, .card, .scope__col, .answer, .promise, .principles article, .steps li, .gallery figure, .quotes, .request__text, .form');
     var revealObserver = new IntersectionObserver(function (entries, obs) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
@@ -52,7 +52,7 @@
     });
   }
 
-  /* --- Оранжевое свечение за курсором --- */
+  /* --- Голубое свечение за курсором --- */
   var glowSections = document.querySelectorAll('.glow');
   var glowNow = null;          // секция под курсором
   var glowX = 0, glowY = 0;    // куда тянемся
@@ -127,6 +127,9 @@
   /* --- Фото по разделам: что открывается с карточек услуг --- */
   var PHOTO_SETS = {
     'kotelnaya': [
+      ['kotelnaya-navien.jpg', 'Котельная с котлом Navien, гидрострелкой и насосными группами', 'Котельная на Navien: гидрострелка и четыре контура'],
+      ['nasosnye-gruppy-baki.jpg', 'Насосные группы и расширительные баки в котельной', 'Насосные группы и расширительные баки'],
+      ['kotelnaya-kollektory-obshiy.jpg', 'Обвязка котла и два коллектора тёплого пола', 'Обвязка котла и коллекторы одним узлом'],
       ['kotelnaya-dva-kotla.jpg', 'Котельная с двумя котлами, расширительным баком и обвязкой', 'Два котла и полная обвязка · дом 240 м²'],
       ['obvyazka-kotla.jpg', 'Обвязка котла: гидрострелка, насосы, запорная арматура', 'Гидрострелка и два контура'],
       ['nasosnye-gruppy.jpg', 'Котёл, четыре насосные группы и щит автоматики', 'Четыре насосные группы и щит · дом 320 м²'],
@@ -134,18 +137,24 @@
       ['kotelnaya-kollektor-okno.jpg', 'Котёл, коллектор и разводка воды в светлой котельной', 'Котельная и коллектор · дом 180 м²']
     ],
     'otoplenie': [
+      ['nasosnye-gruppy-baki.jpg', 'Насосные группы с расходомерами и расширительные баки', 'Отдельная насосная группа на каждый контур'],
+      ['kotelnaya-navien.jpg', 'Котёл Navien с гидрострелкой и обвязкой контуров отопления', 'Гидрострелка развязывает котёл и контуры'],
       ['radiatory-komnata.jpg', 'Радиаторы отопления под окнами в комнате', 'Радиаторы по комнате · подводка в полу'],
       ['nasosnye-gruppy.jpg', 'Насосные группы и щит автоматики рядом с котлом', 'Насосные группы: отдельный контур на этаж'],
       ['obvyazka-kotla.jpg', 'Обвязка котла с гидрострелкой и насосами', 'Гидрострелка развязывает котёл и контуры'],
       ['kotelnaya-kollektor-okno.jpg', 'Разводка отопления и водоснабжения по котельной', 'Разводка от котла по дому']
     ],
     'teplyy-pol': [
+      ['kollektory-teplogo-pola-2.jpg', 'Два коллектора тёплого пола с подписанными контурами', 'Два коллектора: контуры подписаны'],
+      ['kotelnaya-kollektory-obshiy.jpg', 'Коллекторы тёплого пола и обвязка котла в одном узле', 'Коллекторы и обвязка котла рядом'],
       ['teplyy-pol-konturi.jpg', 'Контуры водяного тёплого пола уложены по этажу', 'Контуры по этажу · шаг проверен'],
       ['kollektor-konturi.jpg', 'Коллектор тёплого пола и заведённые в него контуры', 'Контуры заведены в коллектор'],
       ['kollektor-shkaf.jpg', 'Коллектор тёплого пола в шкафу, контуры подписаны', 'Коллектор в шкафу, 12 контуров · каждый подписан'],
       ['kotel-kollektor-svet.jpg', 'Котёл, бойлер и коллектор тёплого пола на 11 контуров', 'Котёл, бойлер и 11 контуров пола']
     ],
     'voda': [
+      ['vodosnabzhenie-boyler-royal.jpg', 'Бойлер Royal Thermo, гидроаккумулятор и фильтры водоснабжения', 'Бойлер, станция и фильтры воды'],
+      ['kollektory-zeissler-voda.jpg', 'Коллекторы водоснабжения Zeissler с подписанными отводами', 'Коллекторы воды: каждый отвод подписан'],
       ['vodosnabzhenie-razvodka.jpg', 'Водоснабжение: бойлер, фильтры, гидроаккумулятор, разводка', 'Насос, станция, фильтры, разводка по дому'],
       ['boyler-gidroakkumulyator.jpg', 'Бойлер и гидроаккумулятор водоснабжения на стене', 'Бойлер и гидроаккумулятор'],
       ['kotel-boyler-razvodka.jpg', 'Котёл, бойлер и разводка воды одним узлом', 'Горячая и холодная вода одним узлом'],
