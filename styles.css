@@ -176,6 +176,8 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
   height: min(600px, 68vh);
   object-fit: cover;
+  /* кадр горизонтальный: прижимаем влево, чтобы котёл и насосные группы были целиком */
+  object-position: left center;
   background: var(--steel);
 }
 .hero__photo figcaption {
