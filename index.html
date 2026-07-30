@@ -448,6 +448,9 @@
       </div>
 
       <form class="form" novalidate>
+        <!-- ловушка для спам-ботов: реальный человек это поле не видит и не заполняет -->
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" class="honeypot">
+
         <div class="field">
           <label for="area">Площадь дома, м²</label>
           <input id="area" name="area" type="number" inputmode="numeric" min="30" max="1000" placeholder="180" required>
@@ -474,10 +477,18 @@
           <span class="field__error" data-error-for="phone">Введите номер полностью</span>
         </div>
 
+        <label class="consent">
+          <input type="checkbox" id="consent" name="consent" required>
+          <span>Согласен на обработку персональных данных и с
+            <a href="privacy.html" target="_blank" rel="noopener">политикой конфиденциальности</a></span>
+        </label>
+        <span class="field__error field__error--consent" data-error-for="consent">Нужно согласие на обработку данных</span>
+
         <button class="btn btn--primary btn--wide" type="submit">Записаться на замер</button>
         <p class="form__note">Перезвоним в течение часа, в выходные тоже.</p>
 
         <p class="form__ok" role="status" hidden>Заявка принята. Перезвоним в течение часа — в выходные тоже.</p>
+        <p class="form__err" role="alert" hidden>Не получилось отправить. Позвоните нам: <a href="tel:+79209223888">+7 920 922-38-88</a>.</p>
       </form>
     </div>
   </section>
@@ -516,6 +527,7 @@
         <p class="footer-title">Контакты</p>
         <ul>
           <li><a href="tel:+79209223888">+7 920 922-38-88</a></li>
+          <li><a href="https://wa.me/79209223888" target="_blank" rel="noopener">WhatsApp</a> · <a href="https://t.me/+79209223888" target="_blank" rel="noopener">Telegram</a></li>
           <li><a href="mailto:domostroyv@mail.ru">domostroyv@mail.ru</a></li>
           <li><a href="https://termotechnika33.ru">termotechnika33.ru</a></li>
           <li>г. Владимир, ул. Куйбышева, 22 Е</li>
@@ -541,9 +553,17 @@
   </figure>
 </div>
 
-<a class="call-fab" href="tel:+79209223888" aria-label="Позвонить: +7 920 922-38-88">
-  <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 10l8 12-6 6c3 7 7 11 14 14l6-6 12 8-6 8c-16 0-38-22-38-38z"/></svg>
-</a>
+<div class="fab">
+  <a class="fab__btn fab__btn--wa" href="https://wa.me/79209223888" target="_blank" rel="noopener" aria-label="Написать в WhatsApp">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9 3 3.5 8.5 3.5 15.5c0 2.3.6 4.5 1.8 6.4L4 29l7.3-1.9c1.8 1 3.8 1.5 5.7 1.5h.1c6.9 0 12.5-5.6 12.5-12.5S23.9 3 17 3h-1zm.1 22.8c-1.7 0-3.4-.5-4.9-1.4l-.4-.2-4.3 1.1 1.2-4.2-.3-.4a10 10 0 0 1-1.6-5.5c0-5.7 4.6-10.3 10.3-10.3 2.8 0 5.3 1.1 7.3 3a10.2 10.2 0 0 1-7.2 17.5l-.1.4zm5.7-7.7c-.3-.2-1.8-.9-2.1-1s-.5-.2-.7.2c-.2.3-.8 1-1 1.2s-.4.2-.7 0c-1.8-.9-3-1.6-4.2-3.6-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5l-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-1 1-1.3 2.3-1.3 3.9 0 2.3 1.7 4.5 1.9 4.8.2.3 3.3 5 8 7 2.9 1.2 4.1 1.3 5.5 1.1.9-.1 2.7-1.1 3.1-2.2.4-1.1.4-2 .3-2.2-.1-.2-.4-.3-.7-.4z"/></svg>
+  </a>
+  <a class="fab__btn fab__btn--tg" href="https://t.me/+79209223888" target="_blank" rel="noopener" aria-label="Написать в Telegram">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M26.5 5.5 4.2 14.1c-1.5.6-1.5 1.5-.3 1.8l5.7 1.8 2.2 6.7c.3.7.5 1 1 1 .5 0 .7-.2 1-.6l2.7-2.6 5.6 4.1c1 .6 1.8.3 2-.9l3.7-17.4c.3-1.5-.6-2.1-1.6-1.7l-.4.2zm-13 12.3 12-7.6c.6-.4 1.1-.2.7.2l-10 9-.4 4.2-2.3-5.8z"/></svg>
+  </a>
+  <a class="fab__btn fab__btn--call" href="tel:+79209223888" aria-label="Позвонить: +7 920 922-38-88">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 10l8 12-6 6c3 7 7 11 14 14l6-6 12 8-6 8c-16 0-38-22-38-38z"/></svg>
+  </a>
+</div>
 
 <script src="script.js"></script>
 </body>

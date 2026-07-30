@@ -291,6 +291,12 @@
   /* --- Проверка и отправка формы --- */
   var form = document.querySelector('.form');
   var ok = form.querySelector('.form__ok');
+  var err = form.querySelector('.form__err');
+  var submitBtn = form.querySelector('button[type="submit"]');
+
+  /* Куда уходит заявка. FormSubmit пересылает её на этот адрес письмом.
+     Первую заявку нужно подтвердить по ссылке из письма (одноразово). */
+  var FORM_ENDPOINT = 'https://formsubmit.co/ajax/domostroyv@mail.ru';
 
   function setInvalid(field, state) {
     var wrap = field.closest('.field');
@@ -303,32 +309,70 @@
     el.addEventListener('change', function () { setInvalid(el, false); });
   });
 
+  var consent = document.getElementById('consent');
+  consent.addEventListener('change', function () {
+    form.classList.toggle('consent-invalid', !consent.checked);
+  });
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
     var area = document.getElementById('area');
     var need = document.getElementById('need');
+    var honey = form.querySelector('.honeypot');
     var bad = null;
 
     var areaOk = area.value !== '' && Number(area.value) >= 30 && Number(area.value) <= 1000;
     var needOk = need.value !== '';
     var phoneOk = phone.value.replace(/\D/g, '').length === 11;
+    var consentOk = consent.checked;
 
     setInvalid(area, !areaOk);
     setInvalid(need, !needOk);
     setInvalid(phone, !phoneOk);
+    form.classList.toggle('consent-invalid', !consentOk);
 
     if (!areaOk) bad = area;
     else if (!needOk) bad = need;
     else if (!phoneOk) bad = phone;
+    else if (!consentOk) bad = consent;
 
     if (bad) { bad.focus(); return; }
 
-    /* Здесь подключается отправка на почту или в CRM.
-       Пока — подтверждение по правилу бренд-бука: перезвоним в течение часа. */
-    ok.hidden = false;
-    form.querySelector('button[type="submit"]').textContent = 'Заявка отправлена';
-    form.querySelector('button[type="submit"]').disabled = true;
+    /* honeypot заполнен — это бот: делаем вид, что всё хорошо, но ничего не шлём */
+    if (honey && honey.value) { ok.hidden = false; return; }
+
+    err.hidden = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Отправляем…';
+
+    fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        'Площадь дома, м²': area.value,
+        'Что нужно': need.value,
+        'Телефон': phone.value,
+        '_subject': 'Заявка с сайта — расчёт котельной',
+        '_template': 'table',
+        '_captcha': 'false'
+      })
+    })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { r: r, d: d }; }); })
+      .then(function (res) {
+        if (res.r.ok && (res.d.success === 'true' || res.d.success === true)) {
+          ok.hidden = false;
+          submitBtn.textContent = 'Заявка отправлена';
+          form.reset();
+        } else {
+          throw new Error('bad response');
+        }
+      })
+      .catch(function () {
+        err.hidden = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Записаться на замер';
+      });
   });
 
   /* --- Год в подвале держим актуальным --- */
