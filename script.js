@@ -2,6 +2,32 @@
 (function () {
   'use strict';
 
+  /* --- Цели Яндекс.Метрики ---
+     Идентификаторы целей: zayavka, zvonok, whatsapp, telegram, max.
+     В кабинете Метрики их нужно завести как цели типа «JavaScript-событие»
+     с такими же идентификаторами. Если Метрика не загрузилась или её
+     заблокировал браузер — молча ничего не делаем. */
+  var METRIKA_ID = 100357303;
+
+  function goal(name) {
+    if (typeof window.ym === 'function') window.ym(METRIKA_ID, 'reachGoal', name);
+  }
+
+  /* Клики по телефону и мессенджерам — их не видно как переходы по страницам,
+     поэтому считаем отдельно. Слушаем на документе: кнопки есть и в шапке,
+     и в подвале, и в плавающем блоке. */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+
+    var href = a.getAttribute('href') || '';
+
+    if (href.indexOf('tel:') === 0) goal('zvonok');
+    else if (href.indexOf('wa.me') > -1) goal('whatsapp');
+    else if (href.indexOf('t.me') > -1) goal('telegram');
+    else if (href.indexOf('max.ru') > -1) goal('max');
+  });
+
   /* --- Мобильное меню --- */
   var burger = document.querySelector('.burger');
   var nav = document.getElementById('nav');
@@ -363,6 +389,7 @@
         if (res.r.ok && (res.d.success === 'true' || res.d.success === true)) {
           ok.hidden = false;
           submitBtn.textContent = 'Заявка отправлена';
+          goal('zayavka');
           form.reset();
         } else {
           throw new Error('bad response');
